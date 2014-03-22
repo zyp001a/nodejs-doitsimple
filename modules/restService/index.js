@@ -42,6 +42,9 @@ var start = function(app, configToSet) {
 	});
 	require("./route")(app, config, restUtils);
 	console.log("Restful Service Start at: /api" + config.restRoot);
+	return {
+		db: db
+	};
 };
 
 module.exports.start = start;

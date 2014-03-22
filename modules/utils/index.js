@@ -7,7 +7,6 @@ var Server = mongo.Server,
 var extendDefaultConfig = function(defaultConfig, configToSet){
 	var config = new Object(defaultConfig);
 	for (var key in configToSet){
-//		console.log(key);
 		if(!config[key]){
 			console.log(new Error("Configuration Error!"+ key+"' is not exist"));
 			process.exit(0);
@@ -19,6 +18,7 @@ var extendDefaultConfig = function(defaultConfig, configToSet){
 	return config;
 };
 module.exports.extendDefaultConfig = extendDefaultConfig;
+
 var getMongodbHandle = function(dbconfig){
 	if(!dbconfig.database || !dbconfig.host){
 		console.log("mongodb host or database is not set");

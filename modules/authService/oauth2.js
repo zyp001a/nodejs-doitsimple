@@ -16,29 +16,7 @@ module.exports = function(app, config){
     }
 	});
 
-
-var findByToken =	function(token, fn) {
-
-	db.collection(config.restConfig.db.entityCollection, function(err, collection) {
-		if(!err){
-			var token_json={};
-			token_json[config.restConfig.field.token]=token;
-			collection.findOne(token_json, function(err, item) {
-				if(!err){
-					return fn(null,item);
-				}
-				else{
-					return fn("access token not found", null);
-				}
-			});
-		}
-		else{
-			return fn("collection doesn't exist", null);	
-		}
-
-	});
-
-}
+	var findByToken = config.tokenCheckFunc;
 
 	// Use the BearerStrategy within Passport.
 	//   Strategies in Passport require a `validate` function, which accept
@@ -52,7 +30,7 @@ var findByToken =	function(token, fn) {
 			// the user to `false` to indicate failure.  Otherwise, return the
 			// authenticated `user`.  Note that in a production-ready application, one
 			// would want to validate the token for authenticity.
-			findByToken(token, function(err, user) {
+			findByToken(token, db, config, function(err, user) {
 				if (err) { return done(err); }
 				console.log('this is '+user);
 				if (!user) { return done(null, false); }
@@ -72,9 +50,5 @@ var findByToken =	function(token, fn) {
     })(req, res);
 	};
 
-	app.get('/authenticate', authenticateMethod, 
-					function(req, res){
-						res.json(req.user);
-					});
 	return authenticateMethod;
 };
